@@ -98,7 +98,7 @@ export default function MealPlanner() {
     // Add static meals, grouped by day
     meals.forEach(meal => {
       const dayIndex = combinedMeals.findIndex(day => day.day === meal.dayOfWeek);
-      const simpleMeal: Meal = { // Convert static meal to dynamic Meal interface
+      const simpleMeal: Meal = {
         id: meal.id,
         name: meal.name,
         ingredients: meal.ingredients.map(ing => `${ing.name} - ${ing.quantity} ${ing.unit}`).join(', '),
@@ -112,29 +112,27 @@ export default function MealPlanner() {
 
     // Add dynamic meals
     mealPlan.forEach(dayPlan => {
-         const dayIndex = combinedMeals.findIndex(day => day.day === dayPlan.day);
-         if (dayIndex > -1) {
-             // Add dynamic meals to existing day if it exists
-             dayPlan.meals.forEach(meal => combinedMeals[dayIndex].meals.push(meal));
-         } else {
-             // Add new dynamic day
-             combinedMeals.push(dayPlan);
-         }
+      const dayIndex = combinedMeals.findIndex(day => day.day === dayPlan.day);
+      if (dayIndex > -1) {
+        dayPlan.meals.forEach(meal => combinedMeals[dayIndex].meals.push(meal));
+      } else {
+        combinedMeals.push(dayPlan);
+      }
     });
 
-    // Sort days (optional, e.g., by a predefined week order or alphabetically)
-     const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-     combinedMeals.sort((a, b) => {
-        const aIndex = dayOrder.indexOf(a.day);
-        const bIndex = dayOrder.indexOf(b.day);
-        if (aIndex === -1 && bIndex === -1) return a.day.localeCompare(b.day); // Sort alphabetically if not in predefined order
-        if (aIndex === -1) return 1; // Non-predefined days come after
-        if (bIndex === -1) return -1; // Non-predefined days come after
-        return aIndex - bIndex;
-     });
+    // Sort days
+    const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    combinedMeals.sort((a, b) => {
+      const aIndex = dayOrder.indexOf(a.day);
+      const bIndex = dayOrder.indexOf(b.day);
+      if (aIndex === -1 && bIndex === -1) return a.day.localeCompare(b.day);
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
 
     return combinedMeals;
-  }, [meals, mealPlan]); // Recompute when static meals or dynamic plan changes
+  }, [mealPlan]); // Removed meals from dependencies since it's static
 
   return (
     <div className="max-w-full mx-auto mt-8 p-4 bg-gray-100 rounded-lg shadow-inner">

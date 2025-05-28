@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { groceries as initialGroceries, GroceryItem } from '../../data/groceries';
-import { StockItem } from '../../data/stock';
 import Image from 'next/image';
 
 // Define favorite items (can be moved to a shared location later if needed)
@@ -17,7 +16,6 @@ const favoriteItems = [
 
 export default function Groceries() {
   const [groceries, setGroceries] = useState<GroceryItem[]>(initialGroceries);
-  const [stockItems, setStockItems] = useState<StockItem[]>([]);
   const [activeTab, setActiveTab] = useState<'favorites' | 'search' | 'create' | 'upload'>('favorites');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,16 +32,6 @@ export default function Groceries() {
   const handleMoveToStock = (item: GroceryItem) => {
     if (item.quantity <= 0) return;
 
-    const newStockItem: StockItem = {
-      id: item.id,
-      name: item.name,
-      quantity: item.quantity,
-      unit: item.unit,
-      image: item.image,
-      dateAdded: new Date().toISOString(),
-    };
-
-    setStockItems(prev => [...prev, newStockItem]);
     setGroceries(prev => prev.map(g => 
       g.id === item.id ? { ...g, quantity: 0 } : g
     ));
@@ -243,7 +231,7 @@ export default function Groceries() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <p>Click to upload a photo of your items</p>
-                    <p className="text-sm">We'll automatically detect what you have</p>
+                    <p className="text-sm">We&apos;ll automatically detect what you have</p>
                   </div>
                 </label>
               </div>

@@ -1,9 +1,5 @@
 "use client";
-import { useState } from 'react';
-import { groceries as initialGroceries, GroceryItem } from '../data/groceries';
-import { StockItem } from '../data/stock';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const featuredRecipes = [
   {
@@ -33,42 +29,6 @@ const featuredRecipes = [
 ];
 
 export default function LandingPage() {
-  const [groceries, setGroceries] = useState<GroceryItem[]>(initialGroceries);
-  const [stockItems, setStockItems] = useState<StockItem[]>([]);
-
-  const handleQuantityChange = (id: string, delta: number) => {
-    setGroceries(groceries =>
-      groceries.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-          : item
-      )
-    );
-  };
-
-  const handleMoveToStock = (item: GroceryItem) => {
-    if (item.quantity <= 0) return;
-
-    const newStockItem: StockItem = {
-      id: item.id,
-      name: item.name,
-      quantity: item.quantity,
-      unit: item.unit,
-      image: item.image,
-      dateAdded: new Date().toISOString(),
-    };
-
-    setStockItems(prev => [...prev, newStockItem]);
-    setGroceries(prev => prev.map(g => 
-      g.id === item.id ? { ...g, quantity: 0 } : g
-    ));
-  };
-
-  const total = groceries.reduce(
-    (sum, item) => sum + item.pricePerUnit * item.quantity,
-    0
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
@@ -110,31 +70,6 @@ export default function LandingPage() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Features Section */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="text-4xl mb-4">📝</div>
-            <h3 className="text-xl font-semibold mb-2">Smart Shopping Lists</h3>
-            <p className="text-gray-600">
-              Create and manage your shopping lists with ease
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">🍳</div>
-            <h3 className="text-xl font-semibold mb-2">Recipe Collection</h3>
-            <p className="text-gray-600">
-              Access hundreds of delicious recipes
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold mb-2">Inventory Management</h3>
-            <p className="text-gray-600">
-              Keep track of your kitchen stock
-            </p>
-          </div>
         </div>
       </div>
     </div>
