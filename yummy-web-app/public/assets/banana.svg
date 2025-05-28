@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#FFF5F7"/>
+  
+  <!-- Plate -->
+  <circle cx="400" cy="300" r="200" fill="white" stroke="#E2E8F0" stroke-width="4"/>
+  
+  <!-- Pancakes Stack -->
+  <circle cx="400" cy="250" r="120" fill="#FCD34D"/>
+  <circle cx="400" cy="200" r="100" fill="#FCD34D"/>
+  <circle cx="400" cy="150" r="80" fill="#FCD34D"/>
+  
+  <!-- Banana Slices -->
+  <path d="M350 200 C350 200, 370 180, 390 190 C410 200, 420 220, 410 240 C400 260, 380 270, 360 260 C340 250, 340 230, 350 200 Z" fill="#FCD34D"/>
+  <path d="M330 220 C330 220, 350 200, 370 210 C390 220, 400 240, 390 260 C380 280, 360 290, 340 280 C320 270, 320 250, 330 220 Z" fill="#FCD34D"/>
+  
+  <!-- Maple Syrup Drizzle -->
+  <path d="M300 150 C320 170, 340 180, 360 170 C380 160, 390 140, 380 120 C370 100, 350 90, 330 100" stroke="#92400E" stroke-width="8" fill="none"/>
+</svg> 

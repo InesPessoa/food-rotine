@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#F472B6"/>
+  
+  <!-- Utensil Icons -->
+  <path d="M60 70 L140 70 L140 80 L60 80 Z" fill="white"/>
+  <path d="M70 50 L130 50 L130 60 L70 60 Z" fill="white"/>
+  <path d="M80 90 L120 90 L120 100 L80 100 Z" fill="white"/>
+  
+  <!-- Heart Shape -->
+  <path d="M100 120 C100 120, 80 100, 80 90 C80 80, 90 80, 100 90 C110 80, 120 80, 120 90 C120 100, 100 120, 100 120 Z" fill="white"/>
+</svg> 

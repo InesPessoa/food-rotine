@@ -1,9 +1,40 @@
 "use client";
 import { useState } from 'react';
 import { groceries as initialGroceries, GroceryItem } from '../data/groceries';
+import { StockItem } from '../data/stock';
+import Image from 'next/image';
+import Link from 'next/link';
 
-export default function Home() {
+const featuredRecipes = [
+  {
+    id: 1,
+    name: 'Banana Pancakes',
+    description: 'Fluffy pancakes with fresh bananas and maple syrup',
+    image: '/assets/banana.svg',
+    time: '20 min',
+    difficulty: 'Easy'
+  },
+  {
+    id: 2,
+    name: 'Apple Salad',
+    description: 'Fresh and crunchy apple salad with walnuts',
+    image: '/assets/apple.svg',
+    time: '15 min',
+    difficulty: 'Easy'
+  },
+  {
+    id: 3,
+    name: 'Strawberry Smoothie',
+    description: 'Refreshing smoothie with fresh strawberries',
+    image: '/assets/strawberry.svg',
+    time: '10 min',
+    difficulty: 'Easy'
+  }
+];
+
+export default function LandingPage() {
   const [groceries, setGroceries] = useState<GroceryItem[]>(initialGroceries);
+  const [stockItems, setStockItems] = useState<StockItem[]>([]);
 
   const handleQuantityChange = (id: string, delta: number) => {
     setGroceries(groceries =>
@@ -15,67 +46,96 @@ export default function Home() {
     );
   };
 
+  const handleMoveToStock = (item: GroceryItem) => {
+    if (item.quantity <= 0) return;
+
+    const newStockItem: StockItem = {
+      id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unit: item.unit,
+      image: item.image,
+      dateAdded: new Date().toISOString(),
+    };
+
+    setStockItems(prev => [...prev, newStockItem]);
+    setGroceries(prev => prev.map(g => 
+      g.id === item.id ? { ...g, quantity: 0 } : g
+    ));
+  };
+
   const total = groceries.reduce(
     (sum, item) => sum + item.pricePerUnit * item.quantity,
     0
   );
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-4">
-      <h1 className="text-2xl font-bold mb-4">Grocery List</h1>
-      <div className="space-y-4">
-        {groceries.map(item => (
-          <div
-            key={item.id}
-            className="flex items-center bg-white rounded shadow p-4 gap-4"
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-16 h-16 object-contain rounded"
-            />
-            <div className="flex-1">
-              <div className="font-semibold text-lg">{item.name}</div>
-              <div className="text-sm text-gray-500">
-                ${item.pricePerUnit}/kg
-              </div>
-              <div className="text-sm text-gray-500">
-                {item.quantity} {item.unit}
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-2">
-                <button
-                  className="px-2 py-1 bg-gray-200 rounded"
-                  onClick={() => handleQuantityChange(item.id, -0.5)}
-                  disabled={item.quantity <= 0}
-                >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                  className="px-2 py-1 bg-gray-200 rounded"
-                  onClick={() => handleQuantityChange(item.id, 0.5)}
-                >
-                  +
-                </button>
-              </div>
-              <div className="text-sm font-semibold">
-                ${(item.pricePerUnit * item.quantity).toFixed(2)}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-between items-center mt-8 p-4 bg-gray-50 rounded shadow">
-        <div>
-          <div className="text-gray-600 text-sm">Total Items: {groceries.length}</div>
-          <div className="text-xl font-bold">${total.toFixed(2)}</div>
-          <div className="text-xs text-gray-400">Estimated Cost (incl. GST)</div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Text */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Plan Your Meals, Save Time and Money
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Discover delicious recipes, create shopping lists, and manage your kitchen inventory all in one place.
+          </p>
         </div>
-        <button className="bg-pink-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-pink-600 transition">
-          Checkout
-        </button>
+
+        {/* Featured Recipes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredRecipes.map(recipe => (
+            <div
+              key={recipe.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+            >
+              <div className="relative h-48">
+                <Image
+                  src={recipe.image}
+                  alt={recipe.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {recipe.name}
+                </h3>
+                <p className="text-gray-600 mb-4">{recipe.description}</p>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>⏱️ {recipe.time}</span>
+                  <span>📊 {recipe.difficulty}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Features Section */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="text-4xl mb-4">📝</div>
+            <h3 className="text-xl font-semibold mb-2">Smart Shopping Lists</h3>
+            <p className="text-gray-600">
+              Create and manage your shopping lists with ease
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl mb-4">🍳</div>
+            <h3 className="text-xl font-semibold mb-2">Recipe Collection</h3>
+            <p className="text-gray-600">
+              Access hundreds of delicious recipes
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-xl font-semibold mb-2">Inventory Management</h3>
+            <p className="text-gray-600">
+              Keep track of your kitchen stock
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

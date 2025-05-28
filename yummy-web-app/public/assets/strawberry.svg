@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#FFF5F7"/>
+  
+  <!-- Glass -->
+  <path d="M300 100 L300 400 L500 400 L500 100 Z" fill="white" stroke="#E2E8F0" stroke-width="4"/>
+  <path d="M280 400 L520 400 L500 450 L300 450 Z" fill="#E2E8F0"/>
+  
+  <!-- Smoothie -->
+  <path d="M310 110 L310 390 L490 390 L490 110 Z" fill="#FCA5A5"/>
+  
+  <!-- Strawberries -->
+  <path d="M350 150 C350 150, 370 130, 390 140 C410 150, 420 170, 410 190 C400 210, 380 220, 360 210 C340 200, 340 180, 350 150 Z" fill="#EF4444"/>
+  <path d="M400 200 C400 200, 420 180, 440 190 C460 200, 470 220, 460 240 C450 260, 430 270, 410 260 C390 250, 390 230, 400 200 Z" fill="#EF4444"/>
+  
+  <!-- Strawberry Seeds -->
+  <circle cx="370" cy="160" r="2" fill="#FCD34D"/>
+  <circle cx="380" cy="170" r="2" fill="#FCD34D"/>
+  <circle cx="360" cy="180" r="2" fill="#FCD34D"/>
+  <circle cx="420" cy="210" r="2" fill="#FCD34D"/>
+  <circle cx="430" cy="220" r="2" fill="#FCD34D"/>
+  <circle cx="410" cy="230" r="2" fill="#FCD34D"/>
+  
+  <!-- Bubbles -->
+  <circle cx="330" cy="250" r="5" fill="white" fill-opacity="0.5"/>
+  <circle cx="350" cy="300" r="3" fill="white" fill-opacity="0.5"/>
+  <circle cx="320" cy="350" r="4" fill="white" fill-opacity="0.5"/>
+</svg> 
