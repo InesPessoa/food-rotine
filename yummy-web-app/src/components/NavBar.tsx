@@ -3,9 +3,13 @@
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function NavBar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
 
   return (
     <nav className="bg-white shadow">
@@ -24,52 +28,59 @@ export default function NavBar() {
             </Link>
             {session ? (
               <>
-                <Link href="/groceries" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/groceries" 
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive('/groceries')
+                      ? 'bg-pink-100 text-pink-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
                   Groceries
                 </Link>
-                <Link href="/stock" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/stock" 
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive('/stock')
+                      ? 'bg-pink-100 text-pink-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
                   Stock
                 </Link>
-                <Link href="/meal-planner" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/meal-planner" 
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive('/meal-planner')
+                      ? 'bg-pink-100 text-pink-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
                   Meal Planner
                 </Link>
               </>
             ) : null}
           </div>
-
           <div className="flex items-center">
             {session ? (
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => signOut()}
-                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-900"
                 >
-                  Logout
+                  Sign Out
                 </button>
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 focus:outline-none">
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="Profile"
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white">
-                        {session.user?.name?.[0] || 'U'}
-                      </div>
-                    )}
-                  </button>
-                  <div className="absolute right-0 w-48 mt-2 py-2 bg-white rounded-md shadow-xl hidden group-hover:block">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                      {session.user?.name}
-                    </div>
-                    <div className="px-4 py-2 text-xs text-gray-500 border-b">
-                      {session.user?.email}
-                    </div>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src={session.user?.image || '/assets/default-avatar.png'}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    {session.user?.name}
+                  </span>
                 </div>
               </div>
             ) : (
