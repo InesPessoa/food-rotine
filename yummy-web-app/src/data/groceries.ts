@@ -14,7 +14,7 @@ export const groceries: GroceryItem[] = [
     pricePerUnit: 7,
     quantity: 0.5,
     unit: 'kg',
-    image: '/images/banana.png',
+    image: '/assets/items/banana.svg',
   },
   {
     id: '2',
@@ -22,7 +22,7 @@ export const groceries: GroceryItem[] = [
     pricePerUnit: 4,
     quantity: 1,
     unit: 'kg',
-    image: '/images/apple.png',
+    image: '/assets/items/apple.svg',
   },
   {
     id: '3',
@@ -30,6 +30,6 @@ export const groceries: GroceryItem[] = [
     pricePerUnit: 4,
     quantity: 1.5,
     unit: 'kg',
-    image: '/images/strawberry.png',
+    image: '/assets/items/strawberry.svg',
   },
 ]; 

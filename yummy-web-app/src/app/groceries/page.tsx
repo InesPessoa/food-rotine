@@ -1,36 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { groceries as initialGroceries, GroceryItem } from '../../data/groceries';
 import { StockItem } from '../../data/stock';
 import Image from 'next/image';
 
-const dummyStockItems: StockItem[] = [
-  {
-    id: '1',
-    name: 'Banana',
-    quantity: 2,
-    unit: 'kg',
-    image: '/assets/items/banana.svg',
-    dateAdded: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'Apple',
-    quantity: 1.5,
-    unit: 'kg',
-    image: '/assets/items/apple.svg',
-    dateAdded: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Strawberry',
-    quantity: 1,
-    unit: 'kg',
-    image: '/assets/items/strawberry.svg',
-    dateAdded: new Date().toISOString(),
-  }
-];
-
+// Define favorite items (can be moved to a shared location later if needed)
 const favoriteItems = [
   { name: 'Milk', image: '/assets/items/milk.svg' },
   { name: 'Eggs', image: '/assets/items/eggs.svg' },
@@ -40,23 +15,15 @@ const favoriteItems = [
   { name: 'Butter', image: '/assets/items/butter.svg' },
 ];
 
-export default function Stock() {
-  const [stockItems, setStockItems] = useState<StockItem[]>(dummyStockItems);
+export default function Groceries() {
+  const [groceries, setGroceries] = useState<GroceryItem[]>(initialGroceries);
+  const [stockItems, setStockItems] = useState<StockItem[]>([]);
   const [activeTab, setActiveTab] = useState<'favorites' | 'search' | 'create' | 'upload'>('favorites');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const handleRemoveFromStock = (id: string) => {
-    setStockItems(prev => prev.filter(item => item.id !== id));
-  };
 
   const handleQuantityChange = (id: string, delta: number) => {
-    setStockItems(prev =>
-      prev.map(item =>
+    setGroceries(groceries =>
+      groceries.map(item =>
         item.id === id
           ? { ...item, quantity: Math.max(0, item.quantity + delta) }
           : item
@@ -64,92 +31,99 @@ export default function Stock() {
     );
   };
 
-  const handleAddItem = (item: { name: string; image: string }) => {
-    const newItem: StockItem = {
-      id: Date.now().toString(),
+  const handleMoveToStock = (item: GroceryItem) => {
+    if (item.quantity <= 0) return;
+
+    const newStockItem: StockItem = {
+      id: item.id,
       name: item.name,
-      quantity: 1,
-      unit: 'pcs',
+      quantity: item.quantity,
+      unit: item.unit,
       image: item.image,
       dateAdded: new Date().toISOString(),
     };
-    setStockItems(prev => [...prev, newItem]);
+
+    setStockItems(prev => [...prev, newStockItem]);
+    setGroceries(prev => prev.map(g => 
+      g.id === item.id ? { ...g, quantity: 0 } : g
+    ));
   };
 
-  const handleAddToGroceries = (item: StockItem) => {
-    // This would typically call an API or update a shared state
-    console.log('Adding to groceries:', item);
-    alert(`Added ${item.name} to groceries!`);
+  const handleAddItem = (item: { name: string; image: string }) => {
+    const newItem: GroceryItem = {
+      id: Date.now().toString(),
+      name: item.name,
+      quantity: 1,
+      unit: 'pcs', // Default unit
+      pricePerUnit: 0, // Default price
+      image: item.image,
+    };
+    setGroceries(prev => [...prev, newItem]);
   };
+
+  const total = groceries.reduce(
+    (sum, item) => sum + item.pricePerUnit * item.quantity,
+    0
+  );
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 p-4">
-      <h1 className="text-2xl font-bold mb-6">Stock</h1>
-
-      {/* Stock Items List */}
+    <div className="max-w-xl mx-auto mt-8 p-4">
+      <h1 className="text-2xl font-bold mb-4">Grocery List</h1>
+      
+      {/* Grocery Items List */}
       <div className="space-y-4 mb-8">
-        {stockItems.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
-            No items in stock yet. Add items using the options below!
-          </div>
-        ) : (
-          stockItems.map(item => (
-            <div
-              key={item.id}
-              className="flex items-center bg-white rounded shadow p-4 gap-4"
-            >
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={64}
-                height={64}
-                className="rounded"
-              />
-              <div className="flex-1">
-                <div className="font-semibold text-lg">{item.name}</div>
-                <div className="flex items-center gap-2 mt-2">
-                  <button
-                    onClick={() => handleQuantityChange(item.id, -0.5)}
-                    className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200"
-                  >
-                    -
-                  </button>
-                  <span className="w-12 text-center">
-                    {item.quantity} {item.unit}
-                  </span>
-                  <button
-                    onClick={() => handleQuantityChange(item.id, 0.5)}
-                    className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200"
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="text-xs text-gray-400 mt-1">
-                  {isClient ? `Added on ${new Date(item.dateAdded).toLocaleDateString()}` : 'Added on...'}
-                </div>
+        {groceries.map(item => (
+          <div
+            key={item.id}
+            className="flex items-center bg-white rounded shadow p-4 gap-4"
+          >
+            <Image
+              src={item.image}
+              alt={item.name}
+              width={64}
+              height={64}
+              className="rounded"
+            />
+            <div className="flex-1">
+              <div className="font-semibold text-lg">{item.name}</div>
+              <div className="text-sm text-gray-500">
+                ${item.pricePerUnit} per {item.unit}
               </div>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2 mt-2">
                 <button
-                  onClick={() => handleAddToGroceries(item)}
-                  className="px-3 py-1 text-green-500 hover:text-green-600 border border-green-200 rounded hover:bg-green-50"
+                  onClick={() => handleQuantityChange(item.id, -0.5)}
+                  className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200"
                 >
-                  Add to Groceries
+                  -
+                </button>
+                <span className="w-12 text-center">
+                  {item.quantity} {item.unit}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(item.id, 0.5)}
+                  className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200"
+                >
+                  +
                 </button>
                 <button
-                  onClick={() => handleRemoveFromStock(item.id)}
-                  className="px-3 py-1 text-red-500 hover:text-red-600 border border-red-200 rounded hover:bg-red-50"
+                  onClick={() => handleMoveToStock(item)}
+                  className="ml-4 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
                 >
-                  Remove
+                  Move to Stock
                 </button>
               </div>
             </div>
-          ))
-        )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 text-right text-xl font-semibold">
+        Total: ${total.toFixed(2)}
       </div>
 
       {/* Add Item Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Add New Items</h2>
+      <div className="bg-white rounded-lg shadow p-6 mt-8">
+        <h2 className="text-xl font-semibold mb-4">Add New Items to Groceries</h2>
         <div className="flex border-b mb-4">
           <button
             className={`px-4 py-2 ${activeTab === 'favorites' ? 'border-b-2 border-pink-500' : ''}`}
